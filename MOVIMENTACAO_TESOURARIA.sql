@@ -1,8 +1,8 @@
 -- Variáveis para o período (mês / ano) e código da empresa
-DECLARE @ANO INT
-SET @ANO = 2018
-DECLARE @MES INT
-SET @MES = 5
+DECLARE @DT_INICIO DATE
+SET @DT_INICIO = '01/06/2018'
+DECLARE @DT_FIM DATE
+SET @DT_FIM =  '05/06/2018'
 DECLARE @EMP INT
 SET @EMP = 1
 
@@ -25,8 +25,8 @@ FROM
   ,TGFFIN FIN
 
 WHERE
-  YEAR(CAB.DTNEG) = @ANO
-  AND MONTH(CAB.DTNEG) = @MES
+  CAB.DTNEG >= @DT_INICIO
+  AND CAB.DTNEG <= @DT_FIM
   AND CAB.CODTIPOPER IN (1112,1101)
   AND CAB.NUMNOTA = FIN.NUMNOTA
   -- Atenção aqui, para não duplicar as linhas foi igualada as datas de negociação da TGFCAB e data da baixa e movimentação
@@ -53,8 +53,8 @@ FROM
 
 WHERE
   CAB.CODTIPOPER = 1304
-  AND YEAR(CAB.DTNEG) = @ANO
-  AND MONTH(CAB.DTNEG) = @MES
+  AND CAB.DTNEG >= @DT_INICIO
+  AND CAB.DTNEG <= @DT_FIM
   AND CAB.CODEMP=@EMP
 
 GROUP BY
