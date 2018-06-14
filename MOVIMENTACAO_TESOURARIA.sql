@@ -1,12 +1,15 @@
 DECLARE @DT_INICIO DATE
 SET @DT_INICIO = '01/06/2018'
 DECLARE @DT_FIM DATE
-SET @DT_FIM =  '02/06/2018'
+SET @DT_FIM =  '14/06/2018'
 DECLARE @EMP INT
 SET @EMP = 1
 
+SELECT * FROM (
+
 -------------------------------------------------------------------------------------------------- ENTRADAS (DINHEIRO+DEPOSITO BANCARIOS / CARNÊ)
-SELECT
+
+(SELECT
   CAB.DTNEG
   ,CASE
   WHEN FIN.CODTIPTIT=1 THEN 'DINHEIRO'
@@ -30,6 +33,7 @@ SELECT
   ,NULL AS [NATUREZA]
   ,NULL AS [SAIDA]
   ,NULL AS [SALDO]
+  ,1 SORTBY
 
 FROM
   TGFCAB CAB
@@ -55,7 +59,7 @@ GROUP BY
 
 -------------------------------------------------------------------------------------------------- SAIDAS
 
-UNION 
+) UNION ALL (
 
 -- SAIDAS
 SELECT 
@@ -65,6 +69,7 @@ SELECT
   ,NAT.DESCRNAT [NATUREZA]
   ,SUM(CAB.VLRNOTA) AS SAIDA
   ,NULL AS [SALDO] 
+  ,2 SORTBY 
 
 FROM
   TGFCAB CAB
@@ -83,7 +88,7 @@ GROUP BY
 
 -------------------------------------------------------------------------------------------------- SOMATORIO
 
-UNION
+) UNION ALL (
 
 SELECT
   ENTRADA.DTNEG 
@@ -92,6 +97,7 @@ SELECT
   ,NULL AS [NATUREZA]
   ,NULL AS [SAIDA]
   ,ENTRADA.SALDO - SAIDA.SALDO AS SALDO
+  ,3 SORTBY
 
 FROM 
 
@@ -111,7 +117,6 @@ FROM
   GROUP BY
   CONVERT(datetime, CONVERT(DATE,  DTLANC, 101))
   ) ,0) AS [SALDO]
-
 
 FROM
   TGFCAB CAB
@@ -157,4 +162,19 @@ GROUP BY
 ) AS SAIDA
 
 ON ENTRADA.DTNEG = SAIDA.DTNEG
+
+)) AS RESULT_SET
+
+GROUP BY
+RESULT_SET.DTNEG
+,RESULT_SET.TIPO_TITULO
+,RESULT_SET.ENTRADA
+,RESULT_SET.NATUREZA
+,RESULT_SET.SAIDA
+,RESULT_SET.SALDO
+,SORTBY
+
+ORDER BY
+RESULT_SET.DTNEG
+,SORTBY
 
