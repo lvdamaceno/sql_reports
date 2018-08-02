@@ -1,0 +1,14 @@
+-- funação para formatação do CPF
+-- chamada da função
+-- sankhya].[formatarCPF](CPF)
+
+USE SANKHYA_PROD	
+GO				
+CREATE FUNCTION FORMATARCPF(@CPF CHAR(11))
+RETURNS CHAR(14)		
+AS
+BEGIN			 
+DECLARE @RETORNO VARCHAR(14)			 
+SET @RETORNO = SUBSTRING(@CPF,1,3) + '.' + SUBSTRING(@CPF,4,3) + '.' + SUBSTRING(@CPF,7,3) + '-' + SUBSTRING(@CPF,10,2) 			 
+RETURN @RETORNO		
+END
