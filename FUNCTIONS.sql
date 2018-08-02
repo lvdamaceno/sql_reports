@@ -42,3 +42,18 @@ DECLARE @RETORNO VARCHAR(10)
 SET @RETORNO = SUBSTRING(@CEP, 1, 2) + '.' + SUBSTRING(@CEP, 3, 3) + '-' + SUBSTRING(@CEP, 6, LEN(@CEP))
 RETURN @RETORNO
 END
+
+-- função para formatação do PIS
+-- chamada da função
+-- ([sankhya].[formatarPIS](PIS)) [PIS]
+                                                                                                  
+USE SANKHYA_PROD	
+GO				
+CREATE FUNCTION FORMATARPIS(@PIS CHAR(11))
+RETURNS CHAR(14)		
+AS
+BEGIN			 
+DECLARE @RETORNO VARCHAR(14)			 
+SET @RETORNO = SUBSTRING(@PIS,1,3) + '.' + SUBSTRING(@PIS,4,5) + '.' + SUBSTRING(@PIS,7,2) + '-' + SUBSTRING(@PIS,10,2) 			 
+RETURN @RETORNO		
+END
